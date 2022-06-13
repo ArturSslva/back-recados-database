@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
-    type: process.env.DATABASE_TYPE,
+    type: "postgres",
     url: process.env.DATABASE_URL,
     logging: false,
     extra: {
