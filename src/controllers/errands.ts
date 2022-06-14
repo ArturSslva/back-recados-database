@@ -21,7 +21,7 @@ export default class ErrandsController {
 
     async update(request: Request, response: Response) {
         const { id } = request.params;
-        const { content } = request.params;
+        const { content } = request.body;
         const errand = await Errands.findOne(id);
 
         if(errand){
