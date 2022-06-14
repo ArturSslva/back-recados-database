@@ -12,10 +12,10 @@ export default class Application {
     }
 
     async init() {
-        await this.database();
         this.config();
         this.middlewares();
         this.routers();
+        await this.database();
     };
 
     start(port: number) {
