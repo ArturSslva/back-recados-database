@@ -1,4 +1,3 @@
-// singleton
 import { Connection, createConnection } from "typeorm";
 
 export default class Database {
@@ -17,8 +16,7 @@ export default class Database {
     private async openConnection() {
         try {
             return await createConnection();
-        }
-        catch (error) {
+        } catch (error) {
             throw new Error(`Error ao conectar ao banco de dados: ${error}`);
         }
         
