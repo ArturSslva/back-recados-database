@@ -3,7 +3,7 @@ import { Connection, createConnection } from "typeorm";
 export default class Database {
     private static instance: Connection;
 
-    private constructor() {}
+    // private constructor() {}
 
     static async getInstance() {
         if (!Database.instance) {
