@@ -14,14 +14,13 @@ export default class Redis {
     }
 
     private openConnection() {
-        try {
-                       
-            return new IORedis(process.env.REDIS_URL,  {
-                tls: {
-                  rejectUnauthorized: false
-                }
-            });
-            // return new IORedis(process.env.REDIS_URL);
+        try {         
+            // return new IORedis(process.env.REDIS_URL,  {
+            //     tls: {
+            //       rejectUnauthorized: false
+            //     }
+            // });
+            return new IORedis(process.env.REDIS_URL);
         } catch(error) {
             throw (`Erro ao se conectar ao Redis: ${error}`);
         }
