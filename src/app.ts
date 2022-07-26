@@ -1,8 +1,9 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 
-import ErrandsRoutes from './routers/errands';
 import Database from './database/connections/Database';
+import Redis from './database/connections/Redis';
+import ErrandsRoutes from './routers/errands';
 
 export default class Application {
     readonly #express: express.Application;
@@ -41,6 +42,7 @@ export default class Application {
     
     private async database() {
         await Database.getInstance();
+        Redis.getInstance();
     }
 
 };
