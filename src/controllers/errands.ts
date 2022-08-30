@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
+import {
+    httpCreatedCode,
+    httpInternalErrorCode,
+    httpSuccessCode
+} from '../constants/httpCodes';
+import { defaultErrorMessage } from '../constants/messages';
 import { CacheRepositoryInterface } from '../contracts/repositories/cache';
 import { ErrandsServiceInterface } from '../contracts/services/errands';
+import { HttpError } from '../errors/httpError';
 
 export default class ErrandsController {
     constructor(private service: ErrandsServiceInterface, private cacheRepository: CacheRepositoryInterface){}
@@ -25,30 +32,7 @@ export default class ErrandsController {
 
             return response.json(json);
         } catch (error) {
-            throw (error);
-        }
-    }
-
-    show = async (request: Request, response: Response) => {
-        const { id } = request.params;
-        
-        try {
-            const cache = await this.cacheRepository.find(`errands:${id}`);
-
-            if (cache) {
-                return response.json(cache);
-            }
-
-            const errand = await this.service.findOne(parseInt(id));
-            const json = {
-                content: errand?.content
-            }
-
-            await this.cacheRepository.save(`errands: ${id}`, json);
-
-            return response.json(json);
-        } catch (error) {
-            throw (`Erro: ${error}`);
+            throw new HttpError(defaultErrorMessage, httpInternalErrorCode);
         }
     }
 
@@ -62,9 +46,9 @@ export default class ErrandsController {
 
             await this.cacheRepository.delete('errands:all');
 
-            return response.json(errand);
+            return response.status(httpCreatedCode), errand;
         } catch(error) {
-            throw (`Error: ${error}`);
+            throw new HttpError(defaultErrorMessage, httpInternalErrorCode);
         }
     }
 
@@ -82,9 +66,9 @@ export default class ErrandsController {
 
             await this.cacheRepository.delete(`errands:all`);
 
-            return response.json(errand);
+            return response.status(httpSuccessCode).json(errand);
         } catch(error) {
-            throw (`Erro: ${error}`);
+            throw new HttpError(defaultErrorMessage, httpInternalErrorCode);
         }
     }
 
@@ -97,9 +81,9 @@ export default class ErrandsController {
             await this.cacheRepository.delete(`errands:${id}`);
             await this.cacheRepository.delete(`errands:all`);
 
-            return response.sendStatus(204);
+            return response.status(204);
         } catch (error) {
-            throw (`Erro ${error}`);
+            throw new HttpError(defaultErrorMessage, httpInternalErrorCode);
         }
     }
 };
