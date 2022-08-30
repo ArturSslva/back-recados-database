@@ -1,10 +1,8 @@
-import { Errands } from "../../database/entities/Errands";
 import { ErrandDTO } from "../../dto/errand";
 
 export interface ErrandsServiceInterface {
-    find(): Promise<Errands[]>;
-    findOne(id: number): Promise<Errands | undefined>;
-    create(errandDTO: ErrandDTO): Promise<Errands>;
-    update(errandDTO: ErrandDTO): Promise<Errands | undefined>;
+    find(): Promise<ErrandDTO[]>;
+    create(errandDTO: ErrandDTO): Promise<ErrandDTO>;
+    update(errandDTO: ErrandDTO): Promise<ErrandDTO | undefined>;
     delete(errandID: number): Promise<void>;
 }

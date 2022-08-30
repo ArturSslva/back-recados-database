@@ -1,15 +1,21 @@
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { HttpROuter } from './contracts/httpRouter';
 
 import Database from './database/connections/Database';
 import Redis from './database/connections/Redis';
-import ErrandsRoutes from './routers/errands';
 
 export default class Application {
     readonly #express: express.Application;
 
     constructor() {
         this.#express = express();
+    }
+
+    get server() {
+        return this.#express;
     }
 
     async init() {
@@ -19,8 +25,9 @@ export default class Application {
         await this.database();
     };
 
+    // istanbul
     start(port: number) {
-        this.#express.listen(process.env.PORT || 8080, () => {
+        this.#express.listen(process.env.PORT || port, () => {
             console.log('API RODANDO');
         });
     };
@@ -35,9 +42,19 @@ export default class Application {
 
     };
 
-    routers() {
-        const errandsRouter = new ErrandsRoutes().init();
-        this.#express.use(errandsRouter);
+    private routers() {
+        const routersPath = path.resolve(__dirname, 'routers');
+
+        fs.readdirSync(routersPath).forEach(filename => {
+            import(path.resolve(routersPath, filename)).then(file => {
+                const instance = new file.default() as HttpROuter;
+
+                this.#express.use(instance.init());
+            });
+        });
+
+        // const errandsRouter = new ErrandsRoutes().init();
+        // this.#express.use(errandsRouter);
     };
     
     private async database() {
